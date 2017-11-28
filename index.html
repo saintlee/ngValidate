@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>ngValidate</title>
+</head>
+<body ng-app="myApp">
+<div class="container" ng-controller="testCtrl">
+
+    <form name="loginForm" ng-validate-scope ng-validate-setting="{tipModel:'tip'}">
+        <div class="form-group">
+            <label>姓名</label>
+            <input id="username" type="text" name="username" class="form-control" placeholder="姓名"
+                   ng-validate="{required:true,minLength:3}" ng-model="test">
+        </div>
+
+        <div>
+            <input type="text" class="form-control" placeholder="姓名" ng-validate="{required:true,maxLength:3}"
+                   ng-validate-message="{maxLength:'姓名个数不能超过{0}位'}"/>
+        </div>
+
+        <div ng-validate="{minLength:6,required:true}">
+            <input type="text" placeholder="非表单" ng-model="aaa"/>
+            <input type="text" placeholder="非表单2"/>
+        </div>
+
+        <select ng-validate="{least:1,required:true}" multiple="multiple">
+            <option>请选择</option>
+            <option>11</option>
+            <option>22</option>
+        </select>
+
+        <input id="test" type="text" placeholder="相同测试" ng-model="test" ng-validate="minLength:2"/>
+
+        <input type="text" placeholder="相同测试" ng-validate="{equalTo:'#test'}"/>
+
+        <div ng-validate="{least:1,most:3}">
+            <label><input name="Fruit" type="checkbox" value=""/>苹果 </label>
+            <label><input name="Fruit" type="checkbox" value=""/>桃子 </label>
+            <label><input name="Fruit" type="checkbox" value=""/>香蕉 </label>
+            <label><input name="Fruit" type="checkbox" value=""/>梨 </label>
+        </div>
+
+        <div ng-validate="{least:1}">
+            <label><input name="sex" type="radio" value=""/>男 </label>
+            <label><input name="sex" type="radio" value=""/>女 </label>
+        </div>
+        <button class="btn btn-block btn-primary" type="submit" ng-validate="{submit:'mySubmit',disabled:true}">提交
+        </button>
+        <!--<button class="btn btn-block btn-primary" type="submit" ng-click="testSubmit();">提交</button>-->
+    </form>
+
+
+    <!--<input type="text" class="form-control" placeholder="姓名" ng-validate="{minLength:6,max:2,required:true}"
+           ng-validate-message="{minLength:'姓名个数不能小于{0}'}">-->
+
+    <!--<a class="sel_btn" type="button" id="sel_btn3" href="#" ng-validate="{max:2}">下午</a>-->
+    <!--<button  ng-validate="{max:2}">按钮button</button>-->
+    <!--<input type="button" ng-validate="form:'loginForm',disabled:true" value="按钮input"/>-->
+</div>
+
+<script type="text/javascript" src="lib/angular.min.js"></script>
+<script type="text/javascript" src="src/js/ngValidate.js"></script>
+
+<script>
+    var app = angular.module('myApp', ['ngValidate']);
+
+    app.controller('testCtrl', function ($scope, $timeout, ngValidate) {
+//        $scope.test = 1111111
+        ngValidate.addMethod('myMethod', function (value) {
+            console.log(value)
+            return false;
+        })
+        $scope.mySubmit = function (isCheck, elements) {
+            console.log(isCheck)
+            console.log(elements)
+        };
+
+        $scope.testSubmit = function () {
+
+            var scope = ngValidate.scope('loginForm');
+            var checkAll = scope.checkAll();
+            console.log(checkAll)
+            return false;
+        }
+//        $scope.aaa = 111;
+    });
+
+</script>
+
+</body>
+</html>
