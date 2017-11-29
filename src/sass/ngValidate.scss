@@ -1,0 +1,100 @@
+$successColor: #3cb1e8;
+$errorColor: #d9534f;
+$fontColor: #fff;
+
+.ng-validate-tip {
+  &.tip-in {
+    position: absolute;
+    background-color: rgba($errorColor, 1);
+    color: $fontColor;
+    border-radius: 3px;
+    font-size: 14px;
+    -moz-user-select: none;
+    user-select: none;
+    opacity: 1;
+    z-index: 10001 !important;
+    -webkit-transition: margin .25s ease-in-out;
+    -moz-transition: margin .25s ease-in-out;
+    &.tip-top {
+      margin-bottom: 6px;
+    }
+    &.tip-bottom {
+      margin-top: 6px;
+    }
+    &.tip-right {
+      margin-left: 6px;
+    }
+    &.tip-left {
+      margin-right: 6px;
+    }
+  }
+  &.tip-arrow {
+    position: absolute;
+    border-width: 6px;
+    width: 0;
+    height: 0;
+    line-height: 0;
+  }
+  &.tip-inner {
+    display: inline-block;
+    color: $fontColor;
+    margin: 4px 6px;
+  }
+  &.tip-top .tip-arrow {
+    border-style: solid dashed dashed dashed;
+    border-color: $errorColor transparent transparent transparent;
+    bottom: -12px;
+    right: 50%;
+  }
+  &.tip-bottom .tip-arrow {
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent $errorColor transparent;
+    top: -12px;
+    right: 50%;
+  }
+  &.tip-right .tip-arrow {
+    border-style: dashed solid dashed dashed;
+    border-color: transparent $errorColor transparent transparent;
+    left: -12px;
+    top: 25%;
+  }
+  &.tip-left .tip-arrow {
+    border-style: dashed dashed dashed solid;
+    border-color: transparent transparent transparent $errorColor;
+    right: -12px;
+    top: 25%;
+  }
+}
+
+input.ng-validate-success {
+  outline: none;
+  border: 1px solid $successColor;
+  box-shadow: 0 0 2px $successColor;
+  background-color: transparent;
+  &:focus {
+    border: 1px solid $successColor;
+    box-shadow: 0 0 2px $successColor;
+  }
+}
+
+input.ng-validate-error {
+  outline: none;
+  border: 1px solid $errorColor;
+  box-shadow: 0 0 4px $errorColor;
+  background-color: transparent;
+  &:focus {
+    border: 1px solid $errorColor;
+    box-shadow: 0 0 4px $errorColor;
+  }
+}
+
+/*
+i.ng-validate-required {
+  &:after {
+    content: '*';
+    position: absolute;
+    color: $errorColor;
+    font-style: normal;
+    margin: 4px 0 0 6px;
+  }
+}*/

@@ -13,6 +13,9 @@ target/
 *.iml
 *.iws
 
+### sass ignore
+.sass-cache/
+
 ### temp ignore
 *.log
 *.cache

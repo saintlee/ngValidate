@@ -3,60 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <title>ngValidate</title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/css/ngValidate.css">
 </head>
 <body ng-app="myApp">
-<div class="container" ng-controller="testCtrl">
 
-    <form name="loginForm" ng-validate-scope ng-validate-setting="{tipModel:'tip'}">
-        <div class="form-group">
-            <label>姓名</label>
-            <input id="username" type="text" name="username" class="form-control" placeholder="姓名"
-                   ng-validate="{required:true,minLength:3}" ng-model="test">
+<div class="container" ng-controller="myCtrl">
+
+    <form name="userForm" ng-validate-scope ng-validate-setting="{tipPosition:'bottom'}">
+        <div class="modal-body">
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="userName">用户名</label>
+                <div class="col-md-9">
+                    <input id="userName" type="text" class="form-control" placeholder="用户名"
+                           ng-validate="{required:true,rangeLength:[6,16],regex:/^[a-zA-Z0-9_-]+$/}"
+                           ng-validate-message="{required:'用户名不能为空',rangeLength:'用户名长度必须为{0}~{1}位'}"
+                           ng-model="userName">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="realName">真实姓名</label>
+                <div class="col-md-9">
+                    <input id="realName" type="text" class="form-control" placeholder="真实姓名"
+                           ng-validate="{minLength:2,maxLength:10}"
+                           ng-validate-message="{minLength:'真实姓名长度不能小于{0}位',maxLength:'真实姓名长度最大长度不能超过{0}位'}"
+                           ng-model="realName">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="phone">手机号</label>
+                <div class="col-md-9">
+                    <input id="phone" type="text" class="form-control" placeholder="电话号码"
+                           ng-validate="{phone:true}"
+                           ng-model="phone">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="email">电子邮件</label>
+                <div class="col-md-9">
+                    <input id="email" type="text" class="form-control" placeholder="电子邮件"
+                           ng-validate="{email:true}"
+                           ng-model="email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="age">年龄</label>
+                <div class="col-md-9">
+                    <input id="age" type="text" class="form-control" placeholder="年龄"
+                           ng-validate="{digits:true,min:1,max:120}"
+                           ng-validate-message="{min:'年龄不能小于{0}',max:'年龄不能大于{0}'}"
+                           ng-model="age">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center">性别</label>
+                <div class="col-md-9" ng-validate="{least:1}">
+                    <label><input name="sex" type="radio" value=""/>男</label>
+                    <label><input name="sex" type="radio" value=""/>女</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center">兴趣爱好</label>
+                <div class="col-md-9" ng-validate="{least:1,most:3}"
+                     ng-validate-message="{least:'请至少选择{0}项',most:'最多选择{0}项'}">
+                    <label><input name="interest" type="checkbox" value=""/>跑步</label>
+                    <label><input name="interest" type="checkbox" value=""/>游泳</label>
+                    <label><input name="interest" type="checkbox" value=""/>看书</label>
+                    <label><input name="interest" type="checkbox" value=""/>睡觉</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="isValid">状态</label>
+                <div class="col-md-9">
+                    <select id="isValid" class="form-control"
+                            ng-validate="{required:true}"
+                            ng-validate-message="{required:'状态不可为空'}"
+                            ng-model="isValid">
+                        <option value="">--请选择--</option>
+                        <option value="0">有效</option>
+                        <option value="1">失效</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="userDesc">备注描述</label>
+                <div class="col-md-9">
+                    <textarea id="userDesc" rows="5" class="form-control" placeholder="备注描述"
+                              ng-model="userDesc"></textarea>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <input type="text" class="form-control" placeholder="姓名" ng-validate="{required:true,maxLength:3}"
-                   ng-validate-message="{maxLength:'姓名个数不能超过{0}位'}"/>
+        <div class="modal-footer">
+            <div style="margin:0 auto">
+                <!-- 扩展按钮提交-->
+                <button type="submit" class="btn btn-primary btn-sm" ng-validate="{submit:'mySubmit',disabled:true}">
+                    提交一
+                </button>
+                <!-- angular按钮提交-->
+                <button type="button" class="btn btn-primary btn-sm" ng-validate="{disabled:true}"
+                        ng-click="nativeSubmit();">
+                    提交二
+                </button>
+                <button type="button" class="btn btn-default btn-sm">取消</button>
+            </div>
         </div>
-
-        <div ng-validate="{minLength:6,required:true}">
-            <input type="text" placeholder="非表单" ng-model="aaa"/>
-            <input type="text" placeholder="非表单2"/>
-        </div>
-
-        <select ng-validate="{least:1,required:true}" multiple="multiple">
-            <option>请选择</option>
-            <option>11</option>
-            <option>22</option>
-        </select>
-
-        <input id="test" type="text" placeholder="相同测试" ng-model="test" ng-validate="minLength:2"/>
-
-        <input type="text" placeholder="相同测试" ng-validate="{equalTo:'#test'}"/>
-
-        <div ng-validate="{least:1,most:3}">
-            <label><input name="Fruit" type="checkbox" value=""/>苹果 </label>
-            <label><input name="Fruit" type="checkbox" value=""/>桃子 </label>
-            <label><input name="Fruit" type="checkbox" value=""/>香蕉 </label>
-            <label><input name="Fruit" type="checkbox" value=""/>梨 </label>
-        </div>
-
-        <div ng-validate="{least:1}">
-            <label><input name="sex" type="radio" value=""/>男 </label>
-            <label><input name="sex" type="radio" value=""/>女 </label>
-        </div>
-        <button class="btn btn-block btn-primary" type="submit" ng-validate="{submit:'mySubmit',disabled:true}">提交
-        </button>
-        <!--<button class="btn btn-block btn-primary" type="submit" ng-click="testSubmit();">提交</button>-->
     </form>
 
-
-    <!--<input type="text" class="form-control" placeholder="姓名" ng-validate="{minLength:6,max:2,required:true}"
-           ng-validate-message="{minLength:'姓名个数不能小于{0}'}">-->
-
-    <!--<a class="sel_btn" type="button" id="sel_btn3" href="#" ng-validate="{max:2}">下午</a>-->
-    <!--<button  ng-validate="{max:2}">按钮button</button>-->
-    <!--<input type="button" ng-validate="form:'loginForm',disabled:true" value="按钮input"/>-->
+    <!-- 作用域外-->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" ng-validate="{form:'userForm'}">
+            提交三
+        </button>
+    </div>
 </div>
 
 <script type="text/javascript" src="lib/angular.min.js"></script>
@@ -65,25 +130,25 @@
 <script>
     var app = angular.module('myApp', ['ngValidate']);
 
-    app.controller('testCtrl', function ($scope, $timeout, ngValidate) {
-//        $scope.test = 1111111
+    app.controller('myCtrl', function ($scope, $timeout, ngValidate) {
+
+//        $scope.userName = 1;
+
         ngValidate.addMethod('myMethod', function (value) {
-            console.log(value)
             return false;
-        })
+        });
+
         $scope.mySubmit = function (isCheck, elements) {
-            console.log(isCheck)
-            console.log(elements)
+            console.log(isCheck);
+            console.log(elements);
         };
 
-        $scope.testSubmit = function () {
-
-            var scope = ngValidate.scope('loginForm');
+        $scope.nativeSubmit = function () {
+            var scope = ngValidate.scope('userForm');
             var checkAll = scope.checkAll();
-            console.log(checkAll)
+            console.log(checkAll);
             return false;
         }
-//        $scope.aaa = 111;
     });
 
 </script>

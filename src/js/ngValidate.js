@@ -87,7 +87,7 @@ if (typeof angular === 'undefined') {
                 },
                 format: function (msg, value) { // 格式化消息
                     if (/{\d+}/.test(msg)) {
-                        if (!angular.isArray[value]) {
+                        if (!angular.isArray(value)) {
                             value = [value];
                         }
                         for (var i = 0; i < value.length; i++) {
@@ -253,7 +253,7 @@ if (typeof angular === 'undefined') {
                 isClose: false, // 关闭验证
                 tipModel: 'tip', // 模式： tip: 悬浮提示；tail: 尾部追加.
                 tipClass: 'ng-validate-tip', // tip class名称以及前缀
-                tipPosition: 'right' // tip位置
+                tipPosition: 'bottom' // tip位置
             },
             button: {
                 form: '',
@@ -296,7 +296,7 @@ if (typeof angular === 'undefined') {
                                     var msg = parameter.getMessage(key, value, messageOption);
                                     if (key === 'required') { // 追加至第一位
                                         this.splice(0, 0, {key: key, value: value, msg: msg});
-                                        iElement.addClass('ng-validate-required');
+                                        iElement.after('<i class="ng-validate-required"></i>')
                                     } else if (key === 'dateFormat') { // 日期格式化
                                         this.push({key: key, value: toolkit.getDateReg(value), msg: msg});
                                     } else if (key === 'extension') { // 后缀格式化
@@ -543,9 +543,9 @@ if (typeof angular === 'undefined') {
         var defaults = this.defaults = {
             tipModel: 'tip', // 模式： tip: 悬浮提示；tail: 尾部追加.
             tipClass: 'ng-validate-tip', // tip class名称以及前缀
-            tipPosition: 'right',// tip位置
+            tipPosition: 'bottom',// tip位置
             tipTemplate: [
-                '<div class="ng-validate-tip tip-in">',
+                '<div class="ng-validate-tip tip-in" style="display: none;">',
                 '<div class="ng-validate-tip tip-arrow"></div>',
                 '<span class="ng-validate-tip tip-inner"></span>',
                 '</div>'
@@ -581,8 +581,8 @@ if (typeof angular === 'undefined') {
                 // 定位
                 $tooltip.position = function () {
                     var elementPosition = $dimensions.getPosition(iElement[0], false),
-                        tooltipWidth = tooltipElement.prop('offsetWidth'),
-                        tooltipHeight = tooltipElement.prop('offsetHeight'),
+                        tooltipWidth = iElement.prop('offsetWidth'),
+                        tooltipHeight = iElement.prop('offsetHeight'),
                         tooltipPosition = $dimensions.getCalculatedOffset(options.tipPosition, elementPosition, tooltipWidth, tooltipHeight);
 
                     tooltipPosition.top += 'px';
@@ -595,13 +595,14 @@ if (typeof angular === 'undefined') {
 
                 // 显示
                 $tooltip.show = function (msg) {
-                    tooltipElement.css({display: 'inline'});
                     tooltipElement.find('span').text(msg);
+                    tooltipElement.css({'display': 'inline'});
+
                 };
 
                 // 隐藏
                 $tooltip.hide = function () {
-                    tooltipElement.css({display: 'none'});
+                    tooltipElement.css({'display': 'none'});
                     tooltipElement.find('span').text('');
                 };
 
@@ -1037,6 +1038,7 @@ if (typeof angular === 'undefined') {
             }],
             link: function postLink(scope, iElement, iAttrs, controller) {
                 iElement.attr('novalidate', 'novalidate');// 禁用HTML5自带验证
+                iElement.attr('autocomplete', 'off');// 禁用autocomplete
             }
         }
     });
