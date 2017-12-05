@@ -1,14 +1,29 @@
 /**
  * Created by SaintLee on 2017/11/22.
  */
-if (typeof angular === 'undefined') {
-    throw new Error('ngValidate.js requires angular')
-}
-
-(function (window, angular, undefined) {
+(function (global, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('ngValidate', ['angular'], factory);
+    } else if (typeof module === "object" && typeof module.exports === "object") {
+        // Node/CommonJS
+        if (typeof angular === 'undefined') {
+            factory(require('angular'));
+        } else {
+            factory(angular);
+        }
+    } else {
+        // Browser globals (global is window)
+        factory(global.angular);
+    }
+}(typeof window !== 'undefined' ? window : this, function (angular) {
     'use strict';
 
-    var validModule = angular.module('ngValidate', ['ng']);
+    if (typeof angular === 'undefined') {
+        throw new Error('ngValidate.js requires angular')
+    }
+
+    var validModule = angular.module('ngValidate', []);
 
     validModule.service('ngValidate', function () {
         var extendMethod = {};
@@ -26,6 +41,7 @@ if (typeof angular === 'undefined') {
             },
             // 扩展验证方式
             addValidate: function (name, message, method) {
+                // TODO 扩展验证方式
                 console.log(name)
             },
             getValidate: function (name) {
@@ -743,7 +759,7 @@ if (typeof angular === 'undefined') {
                     var isValid = toolkit.execFunction(defaultMethods[validOption.key], [iElement, validValue, validOption.value], validOption.key);
                     if (!isValid) {
                         validResult = {key: validOption.key, msg: validOption.msg};
-                        // TODO 扩展所有验证
+                        // TODO 扩展所有验证提示
                         return false;
                     } else {
                         return true;
@@ -1136,4 +1152,5 @@ if (typeof angular === 'undefined') {
         }
     }]);
 
-})(window, window.angular);
+    return validModule;
+}));
