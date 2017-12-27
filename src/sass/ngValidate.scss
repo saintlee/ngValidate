@@ -87,14 +87,3 @@ input.ng-validate-error {
     box-shadow: 0 0 4px $errorColor;
   }
 }
-
-/*
-i.ng-validate-required {
-  &:after {
-    content: '*';
-    position: absolute;
-    color: $errorColor;
-    font-style: normal;
-    margin: 4px 0 0 6px;
-  }
-}*/

@@ -1,4 +1,5 @@
 /**
+ * 废弃
  * Created by SaintLee on 2017/11/22.
  */
 (function (global, factory) {
@@ -23,9 +24,9 @@
         throw new Error('ngValidate.js requires angular')
     }
 
-    var validModule = angular.module('ngValidate', []);
+    var vModule = angular.module('ngValidate', []);
 
-    validModule.service('ngValidate', function () {
+    vModule.service('ngValidate', function () {
         var extendMethod = {};
         return {
             scope: function (formName) {
@@ -58,7 +59,7 @@
     });
 
     // 工具集
-    validModule.provider('toolkit', function () {
+    vModule.provider('toolkit', function () {
         this.$get = ['$parse', function ($parse) {
             var toolkit = {
                 /**
@@ -217,7 +218,7 @@
     });
 
     // 参数
-    validModule.provider('parameter', function () {
+    vModule.provider('parameter', function () {
         var defaults = this.defaults = {
             option: {
                 required: false, // 必须验证
@@ -282,17 +283,17 @@
         this.$get = ['toolkit', function (toolkit) {
             //noinspection UnnecessaryLocalVariableJS
             var parameter = {
-                assemble: function (fieldOption, messageOption, settingOption, iElement, iAttrs) {
+                assemble: function (fieldOpt, messageOpt, settingOpt, iElem, iAttrs) {
                     var result = {};
                     var type = toolkit.toLowerCase(iAttrs.type),
-                        localName = iElement[0].localName;
+                        localName = iElem[0].localName;
                     if (type === 'button' || type === 'submit' || localName === 'button') {
                         // 提交按钮，a标签请添加type为button或submit
                         var button = {};
-                        angular.forEach(fieldOption, function (value, key) {
+                        angular.forEach(fieldOpt, function (value, key) {
                             var defaultButton = defaults.button[key];
                             if (angular.isUndefined(defaultButton)) {
-                                toolkit.loggerWarn("no find this option [" + key + "]:", iElement);
+                                toolkit.loggerWarn("no find this option [" + key + "]:", iElem);
                             }
                             if (toolkit.isValid(value) && toolkit.typeOf(value, defaultButton)) {
                                 this[key] = value;
@@ -303,16 +304,16 @@
                     } else {
                         // 验证表单
                         var options = [];
-                        angular.forEach(fieldOption, function (value, key) {
+                        angular.forEach(fieldOpt, function (value, key) {
                             var defaultValue = defaults.option[key];
                             if (angular.isUndefined(defaultValue)) {
-                                toolkit.loggerWarn("there is no such validation for [" + key + "]:", iElement);
+                                toolkit.loggerWarn("there is no such validation for [" + key + "]:", iElem);
                             } else {
                                 if (toolkit.isValid(value) && toolkit.typeOf(value, defaultValue)) {
-                                    var msg = parameter.getMessage(key, value, messageOption);
+                                    var msg = parameter.getMessage(key, value, messageOpt);
                                     if (key === 'required') { // 追加至第一位
                                         this.splice(0, 0, {key: key, value: value, msg: msg});
-                                        iElement.after('<i class="ng-validate-required"></i>')
+                                        iElem.after('<i class="ng-validate-required"></i>')
                                     } else if (key === 'dateFormat') { // 日期格式化
                                         this.push({key: key, value: toolkit.getDateReg(value), msg: msg});
                                     } else if (key === 'extension') { // 后缀格式化
@@ -320,7 +321,7 @@
                                     } else if (key === 'equalTo') { // 相同
                                         var elem = toolkit.getDocument(value);
                                         if (elem === undefined || elem === null || elem === false) {
-                                            toolkit.loggerError('can not find dom element [' + value + ']', iElement);
+                                            toolkit.loggerError('can not find dom element [' + value + ']', iElem);
                                         } else {
                                             this.push({key: key, value: elem, msg: msg});
                                         }
@@ -332,7 +333,7 @@
                         }, options);
                         if (options.length > 0) {
                             result.options = options;
-                            result.setting = angular.extend({}, defaults.setting, settingOption);
+                            result.setting = angular.extend({}, defaults.setting, settingOpt);
                             result.element = {localName: localName, type: type};
                         }
                     }
@@ -348,7 +349,7 @@
     });
 
     // 坐标计算
-    validModule.factory('$dimensions', ['$document', '$window', function ($document, $window) {
+    vModule.factory('$dimensions', ['$document', '$window', function ($document, $window) {
 
         var $dimensions = {};
 
@@ -555,7 +556,7 @@
     }]);
 
     // 提示信息
-    validModule.provider('$tooltip', function () {
+    vModule.provider('$tooltip', function () {
         var defaults = this.defaults = {
             tipModel: 'tip', // 模式： tip: 悬浮提示；tail: 尾部追加.
             tipClass: 'ng-validate-tip', // tip class名称以及前缀
@@ -639,7 +640,7 @@
     });
 
     // 验证工厂
-    validModule.factory('validatorFactory', ['toolkit', '$http', function (toolkit, $http) {
+    vModule.factory('validatorFactory', ['toolkit', '$http', function (toolkit, $http) {
 
         var defaultMethods = this.defaultMethods = {
             // 必须验证
@@ -813,7 +814,7 @@
     }]);
 
     // 验证
-    validModule.provider('validator', function () {
+    vModule.provider('validator', function () {
 
         var eventModel = this.eventModel = {
             change: 'change', // 内容改变事件
@@ -966,6 +967,7 @@
                             this.push(false);
                         }
                     }, validResult);
+                    console.log()
                     return validResult.length === 0;
                 },
                 checkAllHasError: function ($scope) {
@@ -1014,14 +1016,13 @@
     });
 
     // 父指令. 填写在form表单上
-    validModule.directive('ngValidateScope', function () {
+    vModule.directive('ngValidateScope', function () {
         return {
             restrict: 'A',
             require: 'form',
             scope: true, //{}:全新隔离的作用域，true:继承父作用域并创建自己的作用域，false:继承父作用域
             priority: 3,
             controller: ['$scope', '$element', '$attrs', 'toolkit', 'validator', function ($scope, $element, $attrs, toolkit, validator) {
-
                 var checkAll = $scope.checkAll = function () {
                     var validElements = $scope.ngValidate.element,
                         validResult = [];
@@ -1060,7 +1061,7 @@
     });
 
     // 子指令-设置信息. 填写在表单字段元素上或表单字段父级元素上
-    validModule.directive('ngValidateSetting', ['toolkit', function (toolkit) {
+    vModule.directive('ngValidateSetting', ['toolkit', function (toolkit) {
         return {
             restrict: 'A',
             require: '?^ngValidateScope',
@@ -1076,7 +1077,7 @@
     }]);
 
     // 子指令-提示信息. 填写在表单字段元素上或表单字段父级元素上
-    validModule.directive('ngValidateMessage', ['toolkit', function (toolkit) {
+    vModule.directive('ngValidateMessage', ['toolkit', function (toolkit) {
         return {
             restrict: 'A',
             require: '?^ngValidateScope',
@@ -1092,65 +1093,67 @@
     }]);
 
     // 子指令-字段验证. 填写在表单字段元素上或表单提交按钮上
-    validModule.directive('ngValidate', ['$timeout', 'toolkit', 'parameter', 'validator', 'ngValidate', function ($timeout, toolkit, parameter, validator, ngValidateService) {
+    vModule.directive('ngValidate', ['$timeout', 'toolkit', 'parameter', 'validator', 'ngValidate', function ($timeout, toolkit, parameter, validator, ngValidateService) {
         return {
             restrict: 'A',
             require: ['?^ngValidateScope', '?^ngValidateSetting', '?^ngValidateMessage'],
             scope: true,
             priority: 1,
-            link: function postLink(scope, iElement, iAttrs, controllers) {
+            link: function postLink(scope, iElem, iAttrs, ctrls) {
                 // 延迟加载,确保ngValidateScope，ngValidateSetting,ngValidateMessage初始化完毕
                 $timeout(function () {
 
-                    var ngValidateScopeCtrl = controllers[0], // 父指令控制器
-                        ngValidateSettingCtrl = controllers[1], // 设置控制器
-                        ngValidateMessageCtrl = controllers[2]; // 消息控制器
+                    var ngValidateScopeCtrl = ctrls[0], // 父指令控制器
+                        settingCtrl = ctrls[1], // 设置控制器
+                        messageCtrl = ctrls[2]; // 消息控制器
 
-                    var parentScope; // 父指令的$scope
+                    var $parentScope; // 父指令的$scope
 
-                    var fieldOption = toolkit.formatOption(iAttrs.ngValidate, iElement), // 获取传入的参数
-                        messageOption = ngValidateMessageCtrl === null ? {} : ngValidateMessageCtrl.getMessageOption(),
-                        settingOption = ngValidateSettingCtrl === null ? {} : ngValidateSettingCtrl.getSettingOption();
+                    var fieldOpt = toolkit.formatOption(iAttrs.ngValidate, iElem), // 获取传入的参数
+                        messageOpt = messageCtrl === null ? {} : messageCtrl.getMessageOption(),
+                        settingOpt = settingCtrl === null ? {} : settingCtrl.getSettingOption();
 
-                    var option = parameter.assemble(fieldOption, messageOption, settingOption, iElement, iAttrs);
+                    var option = parameter.assemble(fieldOpt, messageOpt, settingOpt, iElem, iAttrs);
+
+                    console.log(option)
 
                     // ngValidate缺少验证信息时，控制台警告并跳过验证
-                    if (toolkit.isEmptyObject(fieldOption) && toolkit.isEmptyObject(option)) {
-                        toolkit.loggerWarn('ng-validate validate info has missing and skip validate:', iElement);
+                    if (toolkit.isEmptyObject(fieldOpt) && toolkit.isEmptyObject(option)) {
+                        toolkit.loggerWarn('ng-validate validate info has missing and skip validate:', iElem);
                         return;
                     }
 
                     // 绑定隐藏属性
-                    iElement[0]._ngValidateOption = option;
+                    iElem[0]._ngValidateOption = option;
 
                     if (ngValidateScopeCtrl !== null) { // 在父作用域内
-                        parentScope = ngValidateScopeCtrl.getScope();
+                        $parentScope = ngValidateScopeCtrl.getScope();
                     } else { // 在父作用域外
-                        if (!fieldOption.form) { // 动态表单，不在作用域内，但是仍想绑定在某一作用域下
+                        if (!fieldOpt.form) { // 动态表单，不在作用域内，但是仍想绑定在某一作用域下
                             // TODO 不在作用域，单个表单处理
                             return;
                         }
 
-                        parentScope = ngValidateService.scope(fieldOption.form);
-                        if (parentScope === undefined) {
-                            toolkit.loggerError('ngValidate button can not be find form [' + fieldOption.form + ']:', iElement);
+                        $parentScope = ngValidateService.scope(fieldOpt.form);
+                        if ($parentScope === undefined) {
+                            toolkit.loggerError('ngValidate button can not be find form [' + fieldOpt.form + ']:', iElem);
                             return;
                         }
                     }
 
                     // 元素绑定相关参数
-                    iElement.ngValidate = {
-                        $scope: parentScope,
+                    iElem.ngValidate = {
+                        $scope: $parentScope,
                         scope: scope,
                         iAttrs: iAttrs,
                         service: ngValidateService,
                         option: option
                     };
-                    validator.init(iElement);
+                    validator.init(iElem);
                 });
             }
         }
     }]);
 
-    return validModule;
+    return vModule;
 }));

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>ngValidate</title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/css/ngValidate.css">
+</head>
+<body ng-app="myApp">
+
+<div class="container" ng-controller="myCtrl">
+
+    <form name="userForm" ng-validate-scope>
+        <div class="modal-body">
+            <div class="form-group row">
+                <label style="text-align: right" class="col-md-2 col-form-label col-form-label-center"
+                       for="userName">用户名</label>
+                <div class="col-md-9">
+                    <input id="userName" name="userName" type="text" class="form-control" placeholder="用户名"
+                           ng-model="userName" ng-validate rangelength="[3,16]" test
+                           ng-validate-message="{method:'不满足要求'}">
+
+                    <input id="equal" name="equal" type="text" class="form-control" placeholder="测试equal"
+                           ng-model="userName1" ng-validate equal="userName"
+                           ng-validate-message="{method:'不满足要求'}">
+
+                    验证通过：{{userForm.$valid}}
+
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<script type="text/javascript" src="lib/angular.min.js"></script>
+<script type="text/javascript" src="src/js/ngValidate2.js"></script>
+
+<script>
+    var app = angular.module('myApp', ['ngValidate']);
+
+    app.controller('myCtrl', function ($scope, $timeout, ngValidate) {
+
+        ngValidate.addValidate({
+            key: 'test',
+            default: 2,
+            msg: '这是一条验证测试',
+            method: function (ngModelCtrl, verifyValue, verifyKey) {
+                var value = ngModelCtrl.$viewValue;
+                var validity = !ngModelCtrl.$isEmpty(value);
+                ngModelCtrl.$setValidity(verifyKey, validity);
+            }
+        });
+        $scope.test = function () {
+            console.log()
+            return true;
+        }
+    });
+
+
+</script>
+
+</body>
+</html>
